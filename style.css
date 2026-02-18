@@ -1,0 +1,364 @@
+/* ============================================
+   Daemon Brand Overrides for Slidev (seriph theme)
+   ============================================ */
+
+:root {
+  /* Brand tokens */
+  --daemon-blue: #0064FF;
+  --daemon-pink: #FF0069;
+  --daemon-cream: #EBE6D7;
+  --daemon-dark-text: #303030;
+  --daemon-near-black: #212121;
+  --daemon-white: #FFFFFF;
+  --daemon-card-border: #D5D0C4;
+
+  /* Slidev / seriph theme overrides */
+  --slidev-theme-primary: var(--daemon-blue);
+  --slidev-theme-accents: var(--daemon-pink);
+}
+
+/* --- Global slide background --- */
+.slidev-layout {
+  background-color: var(--daemon-cream) !important;
+  color: var(--daemon-dark-text);
+  font-family: 'Work Sans', sans-serif;
+}
+
+/* --- Headings --- */
+.slidev-layout h1,
+.slidev-layout h2,
+.slidev-layout h3 {
+  color: var(--daemon-blue) !important;
+  font-family: 'Work Sans', sans-serif;
+  font-weight: 700;
+}
+
+/* --- Body text --- */
+.slidev-layout p,
+.slidev-layout li,
+.slidev-layout td,
+.slidev-layout th {
+  color: var(--daemon-dark-text);
+}
+
+/* --- Links --- */
+.slidev-layout a {
+  color: var(--daemon-pink);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.slidev-layout a:hover {
+  color: var(--daemon-blue);
+}
+
+/* --- Accent elements (bullets, strong in lists) --- */
+.slidev-layout li::marker {
+  color: var(--daemon-pink);
+}
+
+/* --- Blockquotes --- */
+.slidev-layout blockquote {
+  border-left-color: var(--daemon-pink);
+  background: rgba(0, 100, 255, 0.05);
+  color: var(--daemon-dark-text);
+}
+
+/* --- Tables --- */
+.slidev-layout table {
+  border-color: var(--daemon-card-border);
+}
+
+.slidev-layout th {
+  background-color: var(--daemon-blue);
+  color: var(--daemon-white) !important;
+  font-weight: 700;
+}
+
+.slidev-layout tr:nth-child(even) td {
+  background-color: rgba(235, 230, 215, 0.5);
+}
+
+/* --- Code blocks --- */
+.slidev-layout pre,
+.slidev-layout .slidev-code {
+  background: #E2DDD0 !important;
+  border: 1px solid var(--daemon-card-border);
+  border-radius: 6px;
+}
+
+.slidev-layout code:not(pre code) {
+  background: rgba(0, 100, 255, 0.08);
+  color: var(--daemon-blue);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+/* --- Section / Statement layouts (daemon_blue bg, white text) --- */
+.slidev-layout.section,
+.slidev-layout.statement {
+  background-color: var(--daemon-blue) !important;
+  color: var(--daemon-white) !important;
+}
+
+.slidev-layout.section h1,
+.slidev-layout.section h2,
+.slidev-layout.section p,
+.slidev-layout.statement h1,
+.slidev-layout.statement h2,
+.slidev-layout.statement p {
+  color: var(--daemon-white) !important;
+}
+
+/* --- Cover layout --- */
+.slidev-layout.cover {
+  background-color: var(--daemon-cream) !important;
+}
+
+.slidev-layout.cover h1 {
+  color: var(--daemon-blue) !important;
+}
+
+/* --- Center layout --- */
+.slidev-layout.center h1 {
+  color: var(--daemon-blue) !important;
+}
+
+/* --- Mermaid diagrams --- */
+.mermaid {
+  background: transparent !important;
+}
+
+/* --- Navigation / slide number --- */
+.slidev-nav .slidev-page-number {
+  color: var(--daemon-blue);
+}
+
+/* --- v-click transitions --- */
+.slidev-vclick-target {
+  transition: all 0.3s ease;
+}
+
+/* --- Daemon logo on title/closing slides --- */
+.daemon-logo {
+  position: absolute;
+  bottom: 2rem;
+  right: 2rem;
+  height: 48px;
+  opacity: 0.9;
+}
+
+.daemon-logo-title {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  height: 56px;
+}
+
+/* ============================================
+   Step 2: Title slide hero background
+   ============================================ */
+.slidev-layout.title-slide {
+  background: url('/daemon-hero-bg.jpg') center center / cover no-repeat !important;
+  position: relative;
+}
+
+.title-slide-content {
+  position: absolute;
+  top: 2rem;
+  left: 2.5rem;
+  max-width: 42%;
+}
+
+.title-text h1 {
+  color: var(--daemon-blue) !important;
+  font-size: 1.8rem !important;
+  line-height: 1.15 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  text-align: left !important;
+}
+
+.title-text .subtitle {
+  color: var(--daemon-dark-text);
+  font-size: 1rem;
+  margin: 0.5rem 0 0.2rem 0;
+}
+
+.title-text .date {
+  color: var(--daemon-dark-text);
+  opacity: 0.6;
+  font-size: 0.85rem;
+  margin: 0.2rem 0 0 0;
+}
+
+/* ============================================
+   Step 3: Global decorations — paint splash + logo watermark
+   ============================================ */
+
+/* Paint splash — top-left corner on content slides */
+.slidev-layout::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200px;
+  height: 200px;
+  background: url('/daemon-paint-splash.png') top left / contain no-repeat;
+  opacity: 0.55;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Logo — bottom-right on all slides */
+.slidev-layout::after {
+  content: '';
+  position: absolute;
+  bottom: 1rem;
+  right: 1.5rem;
+  width: 40px;
+  height: 40px;
+  background: url('/daemon-logo-colour.png') center / contain no-repeat;
+  opacity: 0.8;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Suppress paint splash on cover/title, section, statement, closing slides */
+.slidev-layout.title-slide::before,
+.slidev-layout.section::before,
+.slidev-layout.statement::before,
+.slidev-layout.closing-slide::before {
+  display: none;
+}
+
+/* Hide logo watermark on title slide (hero image has its own branding) */
+.slidev-layout.title-slide::after {
+  display: none;
+}
+
+/* Use beige logo on dark-background slides */
+.slidev-layout.section::after,
+.slidev-layout.statement::after {
+  background-image: url('/daemon-logo-beige.png');
+}
+
+/* Suppress paint splash on code-heavy slides */
+.slidev-layout.no-decoration::before {
+  display: none;
+}
+
+/* ============================================
+   Step 4: Section slide enhancements
+   ============================================ */
+
+/* Large beige logo watermark on section slides */
+.slidev-layout.section {
+  position: relative;
+  overflow: hidden;
+}
+
+.slidev-layout.section::before {
+  display: block !important;
+  content: '';
+  position: absolute;
+  bottom: -2rem;
+  right: -2rem;
+  width: 280px;
+  height: 280px;
+  background: url('/daemon-logo-beige.png') center / contain no-repeat;
+  opacity: 0.08;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Hot pink scribble on section slides */
+.slidev-layout.section .scribble-decoration {
+  position: absolute;
+  top: -1rem;
+  right: -2rem;
+  width: 260px;
+  transform: rotate(-15deg);
+  opacity: 0.15;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ============================================
+   Step 5: Statement slide enhancements
+   ============================================ */
+
+/* Centred beige logo watermark on statement slides */
+.slidev-layout.statement {
+  position: relative;
+  overflow: hidden;
+}
+
+.slidev-layout.statement::before {
+  display: block !important;
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 320px;
+  height: 320px;
+  background: url('/daemon-logo-beige.png') center / contain no-repeat;
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Light pink scribble on statement slides */
+.slidev-layout.statement .scribble-decoration {
+  position: absolute;
+  bottom: -1rem;
+  left: -2rem;
+  width: 280px;
+  transform: rotate(-5deg);
+  opacity: 0.12;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ============================================
+   Step 6: Closing slide enhancements
+   ============================================ */
+.slidev-layout.closing-slide {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Colourful logo centred watermark */
+.slidev-layout.closing-slide::before {
+  display: block !important;
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 300px;
+  background: url('/daemon-logo-colour.png') center / contain no-repeat;
+  opacity: 0.06;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Purple scribble on closing slide */
+.slidev-layout.closing-slide .scribble-decoration {
+  position: absolute;
+  bottom: -1rem;
+  left: -2rem;
+  width: 300px;
+  opacity: 0.18;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Ensure slide content sits above decorations */
+.slidev-layout > *:not(.scribble-decoration) {
+  position: relative;
+  z-index: 1;
+}

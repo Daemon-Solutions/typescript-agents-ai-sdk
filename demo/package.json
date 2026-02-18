@@ -1,0 +1,21 @@
+{
+  "name": "pr-review-agent-demo",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "review": "tsx pr-review-agent.ts",
+    "review:custom": "APPROACH=custom tsx pr-review-agent.ts",
+    "review:claude": "APPROACH=claude-code tsx pr-review-agent.ts"
+  },
+  "dependencies": {
+    "ai": "^6.0.0",
+    "@openrouter/ai-sdk-provider": "latest",
+    "ai-sdk-provider-claude-code": "latest",
+    "@octokit/rest": "^21.0.0",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.0.0",
+    "typescript": "^5.7.0"
+  }
+}
