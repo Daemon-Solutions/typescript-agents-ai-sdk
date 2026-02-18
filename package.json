@@ -2,9 +2,14 @@
   "name": "typescript-agents-21-feb",
   "private": true,
   "scripts": {
-    "dev": "slidev",
-    "build": "slidev build",
-    "export": "slidev export"
+    "dev": "slidev decks/typescript-agents/slides.md",
+    "dev:typescript-agents": "slidev decks/typescript-agents/slides.md",
+    "build": "bash scripts/build-all.sh",
+    "build:typescript-agents": "slidev build decks/typescript-agents/slides.md --out dist/typescript-agents",
+    "dev:my-talk": "slidev decks/my-talk/slides.md",
+    "build:my-talk": "slidev build decks/my-talk/slides.md --out dist/my-talk",
+    "export": "slidev export decks/typescript-agents/slides.md",
+    "new-deck": "bash scripts/new-deck.sh"
   },
   "dependencies": {
     "@slidev/cli": "^51.0.0",
