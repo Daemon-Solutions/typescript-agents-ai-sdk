@@ -5,7 +5,9 @@
   "scripts": {
     "review": "tsx pr-review-agent.ts",
     "review:custom": "APPROACH=custom tsx pr-review-agent.ts",
-    "review:claude": "APPROACH=claude-code tsx pr-review-agent.ts"
+    "review:claude": "APPROACH=claude-code tsx pr-review-agent.ts",
+    "brand-review": "tsx brand-review-agent.ts",
+    "brand-review:local": "MODE=local tsx brand-review-agent.ts"
   },
   "dependencies": {
     "ai": "^6.0.0",
