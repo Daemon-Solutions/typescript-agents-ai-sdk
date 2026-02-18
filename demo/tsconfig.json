@@ -9,5 +9,5 @@
     "outDir": "dist",
     "rootDir": "."
   },
-  "include": ["*.ts", "lib/github-tools.ts"]
+  "include": ["*.ts", "lib/**/*.ts"]
 }
