@@ -68,6 +68,15 @@ export async function postReview(
   return { id: review.data.id, state: review.data.state };
 }
 
+export async function getFileContent(owner: string, repo: string, ref: string, path: string): Promise<string> {
+  const octokit = getOctokit();
+  const { data } = await octokit.repos.getContent({ owner, repo, path, ref });
+  if ("content" in data) {
+    return Buffer.from(data.content, "base64").toString("utf-8");
+  }
+  throw new Error(`Could not fetch content for ${path}`);
+}
+
 // ─── AI-SDK tool wrappers (used by Approach A) ──────────────────────────────
 
 export const fetchPRTool = tool({
