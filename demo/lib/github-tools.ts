@@ -1,3 +1,4 @@
+import { execSync } from "node:child_process";
 import { Octokit } from "@octokit/rest";
 import { tool } from "ai";
 import { z } from "zod";
@@ -13,8 +14,7 @@ export function parsePRUrl(url: string) {
 }
 
 function getOctokit() {
-  const token = process.env.GITHUB_TOKEN;
-  if (!token) throw new Error("GITHUB_TOKEN is required");
+  const token = process.env.GITHUB_TOKEN ?? execSync("gh auth token", { encoding: "utf-8" }).trim();
   return new Octokit({ auth: token });
 }
 

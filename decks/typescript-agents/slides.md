@@ -154,7 +154,7 @@ This matters a lot for agents, because you might want to use different models fo
 -->
 
 ---
-layout: two-cols
+layout: two-cols-header
 class: no-decoration
 ---
 
@@ -180,6 +180,12 @@ const result = await generateText({
 });
 ```
 
+<v-click>
+
+**Same `generateText`, different provider.**
+
+</v-click>
+
 ::right::
 
 ### Anthropic
@@ -195,13 +201,17 @@ const result = await generateText({
 });
 ```
 
-<br>
-
-<v-click>
-
-**Same `generateText`, different provider.**
-
-</v-click>
+<style>
+.col-left, .col-right {
+  align-self: start;
+}
+.col-left {
+  padding-right: 1rem;
+}
+.col-right {
+  padding-left: 1rem;
+}
+</style>
 
 <!--
 Here's what I mean by provider abstraction.
@@ -383,12 +393,10 @@ class: no-decoration
 
 # Custom Tools in Action
 
-```ts {all|1-8|10-19}
+```ts {all|1-7|9-16}
 const listFilesTool = tool({
   description: 'List all files in a directory',
-  inputSchema: z.object({
-    dir: z.string().describe('Directory path'),
-  }),
+  inputSchema: z.object({ dir: z.string().describe('Directory path') }),
   execute: async ({ dir }) => {
     const files = await fs.readdir(dir, { recursive: true });
     return { files: files.filter(f => !f.includes('node_modules')) };
@@ -398,12 +406,11 @@ const listFilesTool = tool({
 const runTestsTool = tool({
   description: 'Run the test suite and return results',
   inputSchema: z.object({
-    testPath: z.string().optional().describe('Specific test file to run'),
+    testPath: z.string().optional().describe('Specific test file'),
   }),
   execute: async ({ testPath }) => {
     const cmd = testPath ? `npx vitest ${testPath}` : 'npx vitest --run';
-    const { stdout } = await execAsync(cmd);
-    return { output: stdout };
+    return { output: (await execAsync(cmd)).stdout };
   },
 });
 ```
@@ -480,6 +487,13 @@ sequenceDiagram
   SDK->>User: { text, steps, usage }
 ```
 
+<style>
+.mermaid {
+  transform: scale(0.85);
+  transform-origin: top left;
+}
+</style>
+
 <!--
 Let me walk through the sequence diagram.
 
@@ -500,19 +514,16 @@ class: no-decoration
 
 # Loop Control — `stopWhen` and `prepareStep`
 
-```ts {all|6|7-17}
+```ts {all|6|7-14}
 const { text } = await generateText({
   model,
   system: 'You are a code review agent...',
   prompt: `Review PR: ${prUrl}`,
   tools: { fetchPR, analyzeCode, postReview },
   stopWhen: stepCountIs(10),
-  prepareStep: ({ steps, stepNumber }) => {
-    // Phase 1: only allow reading
-    if (stepNumber <= 3) {
-      return { toolChoice: { type: 'auto' },
-        tools: { fetchPR } };
-    }
+  prepareStep: ({ stepNumber }) => {
+    if (stepNumber <= 3) // Phase 1: only allow reading
+      return { toolChoice: { type: 'auto' }, tools: { fetchPR } };
     // Phase 2: analyze + write
     return { toolChoice: { type: 'auto' },
       tools: { analyzeCode, postReview } };
@@ -552,10 +563,8 @@ const { object: review } = await generateObject({
     summary: z.string().describe('One paragraph overview'),
     issues: z.array(z.object({
       severity: z.enum(['critical', 'warning', 'suggestion']),
-      file: z.string(),
-      line: z.number().optional(),
-      description: z.string(),
-      suggestedFix: z.string().optional(),
+      file: z.string(), line: z.number().optional(),
+      description: z.string(), suggestedFix: z.string().optional(),
     })),
     verdict: z.enum(['approve', 'request_changes', 'comment']),
   }),
@@ -622,7 +631,7 @@ We'll build it two ways. First with custom tools and OpenRouter, then with Claud
 # Architecture
 
 ```mermaid
-flowchart TB
+flowchart LR
   A[PR URL] --> B[parsePRUrl]
   B --> C[Agent Loop]
   C --> D{Approach?}
@@ -635,6 +644,13 @@ flowchart TB
   H -->|No| I[Generate Review]
   I --> J[Post to GitHub]
 ```
+
+<style>
+.mermaid {
+  display: flex;
+  justify-content: center;
+}
+</style>
 
 <!--
 Here's the architecture. We start with a PR URL, parse out the owner, repo, and PR number.
@@ -684,10 +700,8 @@ class: no-decoration
 
 # Step 2: Fetch PR Context with Octokit
 
-```ts {all|1-4|6-10|12-21}
-export async function getPRContext(
-  owner: string, repo: string, pull_number: number
-) {
+```ts {all|1-3|5-9|11-16}
+export async function getPRContext(owner: string, repo: string, pull_number: number) {
   const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
 
   const [pr, files, comments] = await Promise.all([
@@ -697,13 +711,10 @@ export async function getPRContext(
   ]);
 
   return {
-    title: pr.data.title,
-    body: pr.data.body,
-    author: pr.data.user?.login,
+    title: pr.data.title, body: pr.data.body, author: pr.data.user?.login,
     files: files.data.map(f => ({
-      filename: f.filename,
-      status: f.status,
-      patch: f.patch?.slice(0, 3000),  // Truncate large diffs
+      filename: f.filename, status: f.status,
+      patch: f.patch?.slice(0, 3000), // Truncate large diffs
     })),
     existingComments: comments.data.map(c => ({
       path: c.path, body: c.body, author: c.user?.login,
@@ -730,12 +741,10 @@ class: no-decoration
 
 # Approach A: Custom Zod Tools
 
-```ts {all|1-9|11-22}
+```ts {all|1-7|9-18}
 export const fetchPRTool = tool({
   description: 'Fetch full context for a GitHub PR',
-  inputSchema: z.object({
-    prUrl: z.string().describe('Full GitHub PR URL'),
-  }),
+  inputSchema: z.object({ prUrl: z.string().describe('Full GitHub PR URL') }),
   execute: async ({ prUrl }) => {
     const { owner, repo, pull_number } = parsePRUrl(prUrl);
     return getPRContext(owner, repo, pull_number);
@@ -747,8 +756,7 @@ export const postReviewTool = tool({
   inputSchema: z.object({
     prUrl: z.string().describe('Full GitHub PR URL'),
     body: z.string().describe('Review body in markdown'),
-    event: z.enum(['APPROVE', 'REQUEST_CHANGES', 'COMMENT'])
-      .default('COMMENT'),
+    event: z.enum(['APPROVE', 'REQUEST_CHANGES', 'COMMENT']).default('COMMENT'),
   }),
   execute: async ({ prUrl, body, event }) => {
     const { owner, repo, pull_number } = parsePRUrl(prUrl);
@@ -1049,8 +1057,7 @@ const tools = {
       dateRange: z.object({ start: z.string(), end: z.string() }),
     }),
     execute: async (params) => {
-      // Caching layer for repeated queries
-      const cached = await cache.get(cacheKey(params));
+      const cached = await cache.get(cacheKey(params)); // Caching layer
       if (cached) return cached;
       const result = await db.transactions.search(params);
       await cache.set(cacheKey(params), result, { ttl: 300 });
@@ -1125,7 +1132,7 @@ class: no-decoration
 
 # Meta-Agents: Generating Tools with `generateObject`
 
-```ts {all|2-14|15}
+```ts {all|2-12|13}
 const { object: newTool } = await generateObject({
   model: openrouter('openai/gpt-oss-120b:free'),
   schema: z.object({
@@ -1135,12 +1142,10 @@ const { object: newTool } = await generateObject({
       type: z.enum(['string', 'number', 'boolean']),
       description: z.string(),
     })),
-    implementation: z.string()
-      .describe('TypeScript function body'),
+    implementation: z.string().describe('TypeScript function body'),
   }),
   prompt: 'Generate a tool that creates Jira tickets.',
-});
-// → { name: 'createJiraTicket', description: '...', ... }
+}); // → { name: 'createJiraTicket', description: '...', ... }
 ```
 
 <v-click>
