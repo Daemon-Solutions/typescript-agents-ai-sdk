@@ -1,0 +1,39 @@
+name: Brand Review
+
+on:
+  pull_request:
+    paths:
+      - 'decks/*/slides.md'
+      - 'shared/style.css'
+      - 'shared/public/**'
+
+concurrency:
+  group: brand-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  brand-review:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: demo/package-lock.json
+      - name: Install dependencies
+        working-directory: demo
+        run: npm ci
+      - name: Run brand review
+        working-directory: demo
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SCOPE: brand
+          PR_URL: https://github.com/${{ github.repository }}/pull/${{ github.event.pull_request.number }}
+        run: npx tsx brand-review-agent.ts "$PR_URL"
