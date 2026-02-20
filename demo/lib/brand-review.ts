@@ -18,7 +18,7 @@ async function reviewDeck(markdown: string, scope: ReviewScope, deckName: string
   console.log(`🔍 Review scope: ${scope}\n`);
 
   const { text } = await generateText({
-    model: openrouter("openai/gpt-oss-120b:free"),
+    model: openrouter("z-ai/glm-4.5-air:free"),
     system: systemPrompt,
     prompt: `Review this Slidev deck for Daemon brand compliance.
 
