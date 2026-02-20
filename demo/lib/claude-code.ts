@@ -52,7 +52,7 @@ export async function runClaudeCodeProvider(prUrl: string) {
       permissionMode: "bypassPermissions",
       allowDangerouslySkipPermissions: true,
       persistSession: false,
-      env: { CLAUDECODE: undefined, GITHUB_TOKEN: process.env.GITHUB_TOKEN },
+      env: { CLAUDECODE: undefined },
     },
   })("sonnet");
 
