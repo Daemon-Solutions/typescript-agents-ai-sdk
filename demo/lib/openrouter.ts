@@ -11,7 +11,7 @@ export async function runOpenrouterProvider(prUrl: string) {
   });
 
   const { text, steps } = await generateText({
-    model: openrouter("openai/gpt-oss-120b:free"),
+    model: openrouter("z-ai/glm-4.5-air:free"),
     system: SYSTEM_PROMPT,
     prompt: `
     
