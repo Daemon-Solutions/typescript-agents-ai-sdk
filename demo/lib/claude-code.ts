@@ -47,11 +47,12 @@ export async function runClaudeCodeProvider(prUrl: string) {
     defaultSettings: {
       mcpServers: { github: githubMcpServer },
       allowedTools: ["mcp__github__fetchPR", "mcp__github__postReview"],
-      tools: [],
+      disallowedTools: ["Read", "Edit", "Write", "Bash", "Glob", "Grep", "NotebookEdit", "Task", "WebFetch", "WebSearch"],
       maxTurns: 5,
       permissionMode: "bypassPermissions",
       allowDangerouslySkipPermissions: true,
       persistSession: false,
+      env: { CLAUDECODE: undefined, GITHUB_TOKEN: process.env.GITHUB_TOKEN },
     },
   })("sonnet");
 
