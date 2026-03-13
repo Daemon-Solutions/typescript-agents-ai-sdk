@@ -1,6 +1,6 @@
 ---
 theme: seriph
-title: "Untitled Talk"
+title: "Test Brand Review Workflow"
 transition: slide-left
 mdc: true
 fonts:
@@ -15,7 +15,7 @@ class: title-slide
 
 <div class="title-slide-content">
   <div class="title-text">
-    <h1>Untitled Talk</h1>
+    <h1>Test Brand Review Workflow</h1>
     <p class="subtitle">Your subtitle here</p>
     <p class="date">February 2026</p>
   </div>
